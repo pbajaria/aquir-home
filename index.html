@@ -45,15 +45,20 @@
       <h1>Stop losing deals<br />your product<br />should win.</h1>
       <p class="sub">Deal strategy intelligence for revenue teams.</p>
 
-      <!-- Early-access capture. Static site: set `action` to a form endpoint
-           (e.g. a free Formspree form) to collect real signups. Until then the
-           button just shows the confirmation. -->
-      <form class="signup" id="signup" action="" method="POST" novalidate>
+      <!-- Early-access capture via Web3Forms (submissions emailed to the
+           registered inbox). The access_key is public by design — safe in HTML. -->
+      <form class="signup" id="signup" action="https://api.web3forms.com/submit" method="POST" novalidate>
+        <input type="hidden" name="access_key" value="b8186f8d-525e-4fec-a610-77e7c552d2ee" />
+        <input type="hidden" name="subject" value="New Aquir early-access signup" />
+        <input type="hidden" name="from_name" value="Aquir early-access form" />
+        <!-- honeypot: bots tick this; real users never see it -->
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <label class="signup__label" for="email"><b>Email</b><span class="req">(required)</span></label>
         <input id="email" name="email" type="email" required placeholder="you@company.com" autocomplete="email" />
         <button type="submit">Request Early Access</button>
       </form>
-      <p class="signup__ok" id="signup-ok" hidden>Thanks — you're on the early-access list.</p>
+      <p class="signup__ok" id="signup-ok" role="status" hidden>Thanks — you're on the early-access list.</p>
+      <p class="signup__err" id="signup-err" role="alert" hidden>Something went wrong — please email <a href="mailto:hello@aquir.ai">hello@aquir.ai</a>.</p>
     </div>
 
     <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" aria-label="Pause background animation">
@@ -103,13 +108,33 @@
       toggle.setAttribute('aria-label', (paused ? 'Play' : 'Pause') + ' background animation');
     });
 
-    // email capture — confirm client-side until a form backend is wired
+    // email capture — POST to Web3Forms via AJAX, keep the inline confirmation
     var form = document.getElementById('signup');
     var ok = document.getElementById('signup-ok');
+    var err = document.getElementById('signup-err');
+    var submitBtn = form.querySelector('button[type="submit"]');
     form.addEventListener('submit', function (e) {
+      e.preventDefault();
       var email = form.email;
-      if (!email.value || !email.checkValidity()) { email.reportValidity(); e.preventDefault(); return; }
-      if (!form.getAttribute('action')) { e.preventDefault(); form.hidden = true; ok.hidden = false; }
+      if (!email.value || !email.checkValidity()) { email.reportValidity(); return; }
+      err.hidden = true;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form)))
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data.success) { form.hidden = true; ok.hidden = false; }
+          else { throw new Error(data.message || 'submit failed'); }
+        })
+        .catch(function () {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Request Early Access';
+          err.hidden = false;
+        });
     });
   </script>
 </body>

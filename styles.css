@@ -152,6 +152,10 @@ h1 { margin: 0; }
 .signup button:hover { background: #1c351c; transform: translateY(-1px); }
 .signup__ok { margin-top: 16px; max-width: 353px; font-weight: 500; color: var(--btn); }
 .signup__ok[hidden] { display: none; }
+.signup .hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; opacity: 0; }
+.signup__err { margin-top: 14px; max-width: 353px; font-weight: 500; color: #9d2f1a; }
+.signup__err a { color: inherit; }
+.signup__err[hidden] { display: none; }
 
 /* motion pause/play toggle — bottom-right of hero */
 .motion-toggle {
