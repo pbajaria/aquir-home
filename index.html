@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>aquir.ai — Deal strategy intelligence for revenue teams</title>
+  <meta name="description" content="Aquir is deal strategy intelligence for revenue teams. Stop losing deals your product should win. Request early access." />
+  <meta name="theme-color" content="#edf1e2" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="aquir.ai — Deal strategy intelligence for revenue teams" />
+  <meta property="og:description" content="Stop losing deals your product should win." />
+  <meta property="og:url" content="https://aquir.ai" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231f3d2c'/><path d='M21 8 A11 11 0 0 0 9 20' fill='none' stroke='%23cdea6a' stroke-width='5'/></svg>" />
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap nav__inner">
+      <a class="brand" href="/" aria-label="aquir.ai home">
+        <span class="brand__mark" aria-hidden="true"></span>
+        aquir.ai
+      </a>
+      <a class="btn" href="mailto:hello@aquir.ai?subject=Contact%20Aquir">Contact us</a>
+    </div>
+  </header>
+
+  <main class="hero">
+    <div class="wrap">
+      <h1>Stop losing deals your product should win.</h1>
+      <p class="hero__sub">Deal strategy intelligence for revenue teams.</p>
+
+      <!-- Early-access capture.
+           Static site: set `action` to a form endpoint (e.g. a free Formspree form)
+           to collect real signups. Until then, the button just shows the confirmation. -->
+      <form class="signup" id="signup" action="" method="POST" novalidate>
+        <label for="email">Email <span>(required)</span></label>
+        <input id="email" name="email" type="email" required placeholder="you@company.com" autocomplete="email" />
+        <button type="submit">Request Early Access</button>
+      </form>
+      <p class="signup__ok" id="signup-ok" hidden>Thanks — you're on the early-access list.</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer__top">
+        <div>
+          <a class="brand" href="/" aria-label="aquir.ai home">
+            <span class="brand__mark" aria-hidden="true"></span> aquir.ai
+          </a>
+          <nav class="footer__links" aria-label="Footer">
+            <a href="mailto:hello@aquir.ai?subject=Careers%20at%20Aquir">Careers</a>
+            <a href="mailto:hello@aquir.ai?subject=Contact%20Aquir">Contact Us</a>
+          </nav>
+        </div>
+        <p class="footer__blurb">Built for revenue leaders at fast-growing B2B software companies.</p>
+      </div>
+      <div class="footer__bar">
+        <span>&copy; <span id="year">2026</span> Aquir</span>
+        <span>aquir.ai</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    var form = document.getElementById('signup');
+    var ok = document.getElementById('signup-ok');
+    form.addEventListener('submit', function (e) {
+      var email = form.email;
+      if (!email.value || !email.checkValidity()) { email.reportValidity(); e.preventDefault(); return; }
+      // No backend wired yet — confirm client-side instead of 404-ing.
+      if (!form.getAttribute('action')) {
+        e.preventDefault();
+        form.hidden = true;
+        ok.hidden = false;
+      }
+    });
+  </script>
+</body>
+</html>
